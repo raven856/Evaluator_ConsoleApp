@@ -25,7 +25,7 @@ namespace EvaluatorConsoleApp {
                 {
                     if (chars[i] == ' ')
                     {
-                        Console.WriteLine("space found");
+                        Debug.WriteLine("space found");
                         continue;
                     }
                     else
@@ -53,7 +53,7 @@ namespace EvaluatorConsoleApp {
                             nums.Push(nums.Pop() - 48);
                             Debug.WriteLine("pushed number kar to nums value: " + nums.Peek());
                         }
-                        else
+                        else if(nums.Count>=2)
                         //Operator
                         {   // + or -
                             if (chars[i] == '+')
@@ -78,6 +78,10 @@ namespace EvaluatorConsoleApp {
                             {
                                 nums.Push(Math.Pow(nums.Pop(), nums.Pop()));
                             }
+                        }
+                        else
+                        {
+                            Console.WriteLine("input error, make sure you seperate numbers with a space");
                         }
                     }
                 }
@@ -106,12 +110,12 @@ namespace EvaluatorConsoleApp {
                             //check to see if previous char was part of same number
                             if (nums.Count > 0)
                             {
-                                if (chars[i - 1] >= 48 && chars[i - 1] <= 57)
+                                if (chars[i + 1] >= 48 && chars[i + 1] <= 57)
                                 {
-                                    double temp = nums.Pop() * 10;
-                                    nums.Push(chars[i]);
-                                    nums.Push((nums.Pop() - 48) + temp);
-                                    Console.WriteLine("multicharacter number pushed to nums");
+                                    double temp = nums.Pop(); //number to the right
+                                    nums.Push(chars[i]); //current char
+                                    nums.Push(((nums.Pop() - 48)*10) + temp); //current char's number value is multiplied by 10 and added with number to the right of it
+                                    Debug.WriteLine("multicharacter number pushed to nums");
                                     continue;
                                 } //this was for multicharacter numbers
                             }
@@ -121,7 +125,7 @@ namespace EvaluatorConsoleApp {
                             nums.Push(nums.Pop() - 48);
                             Debug.WriteLine("pushed number kar to nums value: " + nums.Peek());
                         }
-                        else
+                        else if (nums.Count >= 2)
                         //Operator
                         {   // + or -
                             if (chars[i] == '+')
@@ -144,6 +148,10 @@ namespace EvaluatorConsoleApp {
                             {
                                 nums.Push(Math.Pow(nums.Pop(), nums.Pop()));
                             }
+                        }
+                        else
+                        {
+                            Console.WriteLine("input error, make sure you seperate numbers with a space");
                         }
                     }
                 }
