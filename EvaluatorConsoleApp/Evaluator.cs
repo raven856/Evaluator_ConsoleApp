@@ -19,6 +19,7 @@ namespace EvaluatorConsoleApp
             Console.WriteLine("Write your expression.");
             string expression = Console.ReadLine();
             char[] chars = expression.ToCharArray();
+
             if (type == "3")
             {
                 //Goes through every character in the expression
@@ -30,7 +31,7 @@ namespace EvaluatorConsoleApp
                         Debug.WriteLine("space found");
                         continue;
                     }
-                    else
+                    else  
                     //checks to see if character is a number or an operator
                     {
                         //Number
@@ -92,6 +93,7 @@ namespace EvaluatorConsoleApp
                 Console.WriteLine("The answer is: " + value.ToString("N2"));
 
             }
+
             else if (type == "1")
             {
                 Debug.WriteLine("prefix code will run");
@@ -162,6 +164,7 @@ namespace EvaluatorConsoleApp
                 Console.WriteLine("The answer is: " + value.ToString("N2"));
 
             }//end pre
+
             else if (type == "2")//Infix
             {
                 Debug.WriteLine("Infix code will run");
@@ -202,44 +205,51 @@ namespace EvaluatorConsoleApp
                             Debug.WriteLine("pushed number kar to nums value: " + nums.Peek());
                         }
                         else
-                        //Operator
+                        //Operatorr
                         {   // + or -
-                            if (chars[i] == '+' || chars[i] == '-')
+                            if ((chars[i] == '+' || chars[i] == '-') && (ops.Count>0))
                             {
                                 //cant put lower precidence on higher precidence so do those calulations before pushing next operator
                                 //cant put '+' on '-', cant put '*' on '/'
-                                if (ops.Count > 0 && ops.Peek() == '-')
+                                //goes through and makes sure there arent any other higher presidence operators left on stack
+                                while (ops.Peek() == '-' || ops.Peek() == '/' || ops.Peek() == '*' || ops.Peek() == '^')
                                 {
-                                    ops.Pop();
-                                    double temp = nums.Pop();
-                                    nums.Push(nums.Pop() - temp);
-                                }
-                                if (ops.Count > 0 && ops.Peek() == '*')
-                                {
-                                    ops.Pop();
-                                    nums.Push(nums.Pop() * nums.Pop());
-                                }
-                                else if (ops.Count > 0 && ops.Peek() == '/')
-                                {
-                                    ops.Pop();
-                                    Double temp = nums.Pop();
-                                    nums.Push(nums.Pop() / temp);
-                                }
-                                else if (ops.Count > 0 && ops.Peek() == '^')
-                                {
-                                    ops.Pop();
-                                    Double temp = nums.Pop();
-                                    nums.Push(Math.Pow(nums.Pop(), temp));
-                                }
-
-                                ops.Push(chars[i]);
-
+                                    if (ops.Peek() == '-')
+                                    {
+                                        ops.Pop();
+                                        double temp = nums.Pop();
+                                        nums.Push(nums.Pop() - temp);
+                                    }
+                                    else if (ops.Peek() == '*')
+                                    {
+                                        ops.Pop();
+                                        nums.Push(nums.Pop() * nums.Pop());
+                                    }
+                                    else if (ops.Peek() == '/')
+                                    {
+                                        ops.Pop();
+                                        Double temp = nums.Pop();
+                                        nums.Push(nums.Pop() / temp);
+                                    }
+                                    else if (ops.Peek() == '^')
+                                    {
+                                        ops.Pop();
+                                        Double temp = nums.Pop();
+                                        nums.Push(Math.Pow(nums.Pop(), temp));
+                                    }
+                                    //  the next block call in the while statement will get error if 
+                                    //  the operator stack is empty when Peek() gets called
+                                    //  thats why it breaks out if operator stack is empty
+                                    if (ops.Count == 0){
+                                        break;
+                                    }
+                                }//end while
                                 Debug.WriteLine("pushed + or - ");
                             } //end '+' or '-'
                             // ^
                             else if (chars[i] == '^')
                             {
-                                ops.Push(chars[i]);
+                                // ^ char will get pushed
                             } //end '^'
                             // * or /
                             else
@@ -255,10 +265,10 @@ namespace EvaluatorConsoleApp
                                     Double temp = nums.Pop();
                                     nums.Push(nums.Pop() / temp);
                                 }
-
-                                ops.Push(chars[i]);
                             } //end '*' or '/'
-                        }
+                            //Operator gets pushed onto stack
+                            ops.Push(chars[i]);
+                        }//End Operator
                     }
                 }//All Characters pushed  
                 while (ops.Count != 0)
@@ -304,14 +314,8 @@ namespace EvaluatorConsoleApp
                 Console.WriteLine("error in your entry");
             }
             Console.WriteLine("");
+            //Answer is given, now call evaluate() again to ask for another expression
             evaluate();
         } //end evaluate method
-
-
-        public static void Main(string[] args)
-        {
-            Evaluator evaluator = new Evaluator();
-            evaluator.evaluate();
-        }
     }//end Class
 }//end namespace
